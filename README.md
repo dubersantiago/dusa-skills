@@ -73,7 +73,7 @@ Autorizar → Explorar → Resolver incertidumbre → Clasificar ─┬─ peque
 - **Lo pequeño va directo**, sin documentos: se retoma con el pedido y `git diff`.
 - **Lo grande lleva un único documento** `odd/tasks/<feature>.md`: specs citadas literalmente, tareas y log.
 - **Una autorización inicial**; después pregunta solo ante decisiones reales.
-- **Commits del agente por unidad de trabajo** (configurable a `Commits: usuario`).
+- **Commits del agente por unidad de trabajo** (configurable a `Commits: usuario`, ver [Commits: agente o usuario](#commits-agente-o-usuario)).
 
 **Skills (1):** `odd`, con referencias y plantillas que se cargan bajo demanda.
 
@@ -101,7 +101,79 @@ ODD debe correr en **cada** solicitud, así que agrega esto al `CLAUDE.md` / `AG
 Usa la skill `odd` (Organic Driven Development) en toda solicitud. Configuración en `odd/config.md`; documentos de feature en `odd/tasks/`.
 ```
 
-Opcional: copia `templates/config-template.md` de la skill a `odd/config.md` del proyecto (TDD, runner, política de commits, estrategia de entrega, áreas de alto riesgo). También puedes invocarla a mano con `/odd`.
+También puedes invocarla a mano con `/odd`.
+
+### Configurar ODD (`odd/config.md`)
+
+La configuración es opcional y vive en `odd/config.md`, en la raíz del proyecto (versiónalo). Lo que no declares usa el valor por defecto. Para crearla, copia la plantilla que viene con la skill instalada:
+
+```bash
+cd ~/Proyectos/mi-proyecto
+mkdir -p odd
+cp .claude/skills/odd/templates/config-template.md odd/config.md      # instalada en el proyecto
+# cp ~/.claude/skills/odd/templates/config-template.md odd/config.md  # instalada global (-g)
+```
+
+Después reemplaza cada `[opción | opción]` por el valor que quieras y borra el comentario del principio. La plantilla tiene secciones de pruebas (TDD, runner, checks), commits y entrega, áreas de alto riesgo y referencias.
+
+### Commits: agente o usuario
+
+Por defecto, en el trabajo grande **el agente hace los commits** por unidad de trabajo, en la rama de la feature (si está en la rama por defecto, primero crea la rama). Si prefieres hacerlos tú, como en SDD, pon `Commits: usuario`.
+
+Ejemplo completo de `odd/config.md` para un proyecto donde los commits los haces tú:
+
+```markdown
+# ODD — mi-proyecto
+
+## Pruebas
+- **TDD:** on
+- **Runner enfocado:** `npx jest <ruta>`
+- **Suite completa:** `npm test`
+- **Otros checks:** tipos: `npx tsc --noEmit` · lint: `npm run lint`
+
+## Commits y entrega
+- **Commits:** usuario
+- **Rama por defecto:** main
+- **Estrategia de entrega por defecto:** ask-on-risk
+
+## Riesgo
+- **Áreas de alto riesgo propias del proyecto:** `src/auth/**`, migraciones en `db/`
+```
+
+Si solo quieres cambiar los commits, basta con esto (todo lo demás usa los valores por defecto):
+
+```bash
+mkdir -p odd
+cat > odd/config.md <<'EOF'
+# ODD — mi-proyecto
+
+## Commits y entrega
+- **Commits:** usuario
+EOF
+```
+
+Cómo se ve en la práctica con `Commits: usuario`:
+
+```text
+Agente:  T2 lista para commit.
+         Archivos: src/auth/token.ts, src/auth/token.test.ts
+         Mensaje propuesto: feat(auth): validar expiración del token en el login
+         Me detengo hasta que hagas el commit.
+
+Tú:      git add src/auth/token.ts src/auth/token.test.ts
+         git commit -m "feat(auth): validar expiración del token en el login"
+         → "listo, hice el commit"
+
+Agente:  Registra el hash en ## Tasks de odd/tasks/<feature>.md y sigue con T3.
+```
+
+| | `agente` (por defecto) | `usuario` |
+|---|---|---|
+| Quién hace el commit | El agente, por unidad de trabajo | Tú |
+| Qué hace el agente | Commitea y sigue con la siguiente tarea | Deja la unidad lista (lista exacta de archivos + mensaje Conventional Commit propuesto) y se detiene |
+| Registro | Hash del commit en `## Tasks` del documento de feature | Cuando avisas que hiciste el commit, registra el hash en `## Tasks` |
+
+En los dos modos, push, crear PR y merge **siempre** son decisión tuya, y el agente nunca reescribe historial (rebase, amend, force-push) sin autorización explícita. El trabajo pequeño no hace commits salvo que los pidas.
 
 Guía completa (tamaños, diferencias con SDD, qué se adaptó del original): [skills/odd/README.md](skills/odd/README.md).
 
