@@ -9,6 +9,12 @@ Skills propias para agentes de código (Claude Code, Codex, Cursor, OpenCode…)
 
 Usa `sdd` cuando quieras control paso a paso (zonas sensibles, equipos que revisan cada tarea) y `odd` para el trabajo diario. Puedes instalar una sola o las dos: cada grupo es autocontenido.
 
+Utilidades sueltas, independientes de la metodología:
+
+| Utilidad | En una línea | Entrada |
+|---|---|---|
+| [PR](#pr--mensajes-de-pull-request) | Título y cuerpo de un PR en Markdown a partir del diff entre dos ramas, según una plantilla | `/pr-mensaje` |
+
 ---
 
 ## SDD — Spec-Driven Development
@@ -179,6 +185,35 @@ Guía completa (tamaños, diferencias con SDD, qué se adaptó del original): [s
 
 ---
 
+## PR — Mensajes de pull request
+
+Redacta el título y el cuerpo de un PR leyendo `git log` y `git diff` desde el merge-base entre la rama origen y la destino, y rellena una plantilla. Es de solo lectura: no crea el PR salvo que se lo pidas (entonces usa `gh pr create`).
+
+**Skills (1):** `pr-mensaje`.
+
+```bash
+npx skills add dubersantiago/dusa-skills -a claude-code -s pr-mensaje        # en el proyecto
+npx skills add dubersantiago/dusa-skills -a claude-code -g -s pr-mensaje     # global
+```
+
+Atajo con el script del repo: `~/Proyectos/dusa-skills/install.sh pr`.
+
+```text
+/pr-mensaje de feature/login a develop    # ramas explícitas
+/pr-mensaje de esta rama a main           # origen = rama actual
+/pr-mensaje                               # rama actual → rama por defecto del remoto
+```
+
+**Plantilla**, la primera que exista:
+
+1. La que indiques en el pedido (`/pr-mensaje de X a Y usando docs/mi-plantilla.md`).
+2. La del repo: `.github/pull_request_template.md` (o sus variantes habituales, incluida la carpeta `.github/PULL_REQUEST_TEMPLATE/`).
+3. La de la skill: [templates/pr-template.md](skills/pr/pr-mensaje/templates/pr-template.md) (resumen, tipo de cambio, cambios, cómo probar, riesgos, capturas, checklist).
+
+No inventa pruebas, capturas ni motivaciones: lo que no sale del diff, los commits o tu pedido queda como `_Pendiente: …_` para que lo completes.
+
+---
+
 ## Comandos de `npx skills`
 
 Referencia rápida del CLI. `<fuente>` puede ser `dubersantiago/dusa-skills`, la URL completa (`https://github.com/dubersantiago/dusa-skills`), cualquier URL git o una ruta local.
@@ -231,11 +266,15 @@ skills/
 │   ├── sdd-ejecucion/
 │   ├── sdd-verificacion/
 │   └── sdd-auditoria/
-└── odd/                       # otra metodología, mismo patrón
-    ├── README.md
-    └── odd/                   # una sola skill → /odd
+├── odd/                       # otra metodología, mismo patrón
+│   ├── README.md
+│   └── odd/                   # una sola skill → /odd
+│       ├── SKILL.md
+│       ├── references/        # se cargan bajo demanda
+│       └── templates/
+└── pr/                        # utilidad suelta
+    └── pr-mensaje/            # → /pr-mensaje
         ├── SKILL.md
-        ├── references/        # se cargan bajo demanda
         └── templates/
 ```
 
