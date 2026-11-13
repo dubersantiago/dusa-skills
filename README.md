@@ -15,6 +15,10 @@ Utilidades sueltas, independientes de la metodología:
 |---|---|---|
 | [PR](#pr--mensajes-de-pull-request) | Título y cuerpo de un PR en Markdown a partir del diff entre dos ramas, según una plantilla | `/pr-mensaje` |
 
+## Próximamente
+
+- **SWARM (enjambres de agentes):** una ruta de ejecución para features **grandes y complejas** que se descomponen en unidades independientes. Un orquestador planifica, reparte el trabajo a workers en paralelo (cada uno con su superficie de edición disjunta), integra por olas y verifica con evidencia. Reutilizaría el documento de feature de ODD. No sería para el día a día: lo pequeño y lo secuencial seguirían en `odd`. Aún sin diseñar ni implementar.
+
 ---
 
 ## SDD — Spec-Driven Development
@@ -47,8 +51,6 @@ npx skills add dubersantiago/dusa-skills -a claude-code -g \
 npx skills add dubersantiago/dusa-skills -a codex \
   -s sdd sdd-planificacion sdd-mantenimiento sdd-ejecucion sdd-verificacion sdd-auditoria
 ```
-
-Atajo con el script del repo (detecta las skills del grupo solo): `~/Proyectos/dusa-skills/install.sh sdd` (ver [install.sh](#installsh)).
 
 ### Usar SDD
 
@@ -95,8 +97,6 @@ npx skills add dubersantiago/dusa-skills -a claude-code -g -s odd
 # Otro agente
 npx skills add dubersantiago/dusa-skills -a codex -s odd
 ```
-
-Atajo con el script del repo: `~/Proyectos/dusa-skills/install.sh odd`.
 
 ### Activar ODD en un proyecto
 
@@ -185,6 +185,47 @@ Guía completa (tamaños, diferencias con SDD, qué se adaptó del original): [s
 
 ---
 
+## Usar SDD y ODD en un mismo proyecto
+
+Se pueden instalar las dos en el mismo proyecto. No chocan en archivos (SDD usa `docs/contexts/`, ODD usa `odd/`), pero sí en el disparo: ODD se activa en **toda** solicitud desde el `CLAUDE.md`, y SDD solo con `/sdd`. Sin una regla de prioridad, el agente podría aplicar las dos a la vez. La solución es declarar en el `CLAUDE.md` / `AGENTS.md` cuál manda en cada caso.
+
+**1. Instala las dos** (el orquestador de SDD necesita sus 5 skills hermanas):
+
+```bash
+cd ~/Proyectos/mi-proyecto
+npx skills add dubersantiago/dusa-skills -a claude-code \
+  -s sdd sdd-planificacion sdd-mantenimiento sdd-ejecucion sdd-verificacion sdd-auditoria odd
+```
+
+**2. Agrega esto al `CLAUDE.md` / `AGENTS.md`** en lugar del bloque de solo ODD:
+
+```markdown
+## Flujo de trabajo
+Este proyecto usa dos metodologías. Elige una por solicitud, nunca las dos a la vez:
+
+- **Por defecto, usa la skill `odd`** (Organic Driven Development) en toda solicitud. Configuración en `odd/config.md`; documentos de feature en `odd/tasks/`.
+- **Usa la skill `sdd` solo si invoco `/sdd`** o si lo pido de forma explícita ("hazlo con SDD"). Mientras dure ese trabajo, `odd` no aplica: sigue el flujo de `sdd` (contexto en `docs/contexts/`, una tarea a la vez, commits míos).
+- Si hay un contexto SDD abierto (`docs/contexts/*-context.md` sin cerrar) y retomo ese trabajo, continúa con `sdd`.
+- Zonas sensibles (indica aquí las rutas, p. ej. `src/auth/**`, `db/migrations/`): usa siempre `sdd`.
+```
+
+**3. Configura cada una por separado**, son independientes: `/sdd configurar` crea `docs/contexts/_config.md` y `odd/config.md` es opcional (ver [Configurar ODD](#configurar-odd-oddconfigmd)).
+
+**Cómo se reparte el trabajo**
+
+| Situación | Metodología | Cómo se entra |
+|---|---|---|
+| Arreglo pequeño, cambio de una línea, duda | `odd` (directo, sin documentos) | Solicitud normal |
+| Feature mediana o grande del día a día | `odd` (un documento en `odd/tasks/`) | Solicitud normal |
+| Zona sensible, cambio que el equipo revisa tarea por tarea | `sdd` | `/sdd <spec o pedido>` |
+| Retomar un trabajo de SDD | `sdd` | `/sdd <ID>` |
+
+Un mismo trabajo usa una sola metodología de principio a fin. Si uno empezado en `odd` resulta ser sensible, ciérralo o descártalo y reábrelo con `/sdd`; no mezcles `odd/tasks/<feature>.md` con `docs/contexts/<ID>-context.md` para la misma feature.
+
+Si las dos usan commits, ojo con los modos: SDD siempre deja los commits al usuario; ODD por defecto los hace el agente. Si quieres el mismo comportamiento en todo el proyecto, pon `Commits: usuario` en `odd/config.md`.
+
+---
+
 ## PR — Mensajes de pull request
 
 Redacta el título y el cuerpo de un PR leyendo `git log` y `git diff` desde el merge-base entre la rama origen y la destino, y rellena una plantilla. Es de solo lectura: no crea el PR salvo que se lo pidas (entonces usa `gh pr create`).
@@ -195,8 +236,6 @@ Redacta el título y el cuerpo de un PR leyendo `git log` y `git diff` desde el 
 npx skills add dubersantiago/dusa-skills -a claude-code -s pr-mensaje        # en el proyecto
 npx skills add dubersantiago/dusa-skills -a claude-code -g -s pr-mensaje     # global
 ```
-
-Atajo con el script del repo: `~/Proyectos/dusa-skills/install.sh pr`.
 
 ```text
 /pr-mensaje de feature/login a develop    # ramas explícitas
@@ -232,22 +271,6 @@ Referencia rápida del CLI. `<fuente>` puede ser `dubersantiago/dusa-skills`, la
 - Sin `-a`, el CLI pregunta a qué agentes instalar.
 - **Actualizar:** `npx skills update` solo actualiza lo instalado desde un repo remoto (GitHub o URL git). Lo instalado desde una ruta local se copia y no se actualiza solo: vuelve a instalarlo.
 - Las skills se cargan al iniciar la sesión del agente: después de instalar o actualizar, abre una sesión nueva.
-
-### install.sh
-
-Atajo que instala todas las skills de un grupo. Ejecútalo desde la raíz del proyecto donde las quieres:
-
-```bash
-cd ~/Proyectos/mi-proyecto
-~/Proyectos/dusa-skills/install.sh sdd            # el grupo sdd, para Claude Code
-~/Proyectos/dusa-skills/install.sh sdd -g         # global (todos tus proyectos)
-~/Proyectos/dusa-skills/install.sh odd -a codex   # otro grupo, otro agente
-~/Proyectos/dusa-skills/install.sh                # lista los grupos disponibles
-```
-
-- Detecta las skills del grupo a partir de `skills/<grupo>/*/SKILL.md`, así que no hay que tocarlo al agregar skills.
-- Las opciones extra se pasan tal cual a `npx skills add`. Si no indicas `-a`, usa `-a claude-code`.
-- Por defecto instala desde la copia local del repo (no se actualiza con `npx skills update`; vuelve a ejecutar el script). Para instalar desde GitHub: `SOURCE=dubersantiago/dusa-skills ~/Proyectos/dusa-skills/install.sh sdd`.
 
 ---
 
