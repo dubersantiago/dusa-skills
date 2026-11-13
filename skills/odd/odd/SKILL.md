@@ -1,13 +1,13 @@
 ---
 name: odd
-description: Organic Driven Development (ODD), flujo de desarrollo proporcional basado en el de Gentle Shell. Usar en TODA solicitud de un repo que adopte ODD (o cuando el usuario invoque /odd), sin que el usuario pida un plan ni seguimiento — preguntas, revisiones, bugs, features, refactors, infraestructura. Las consultas quedan en solo lectura hasta que se pida un cambio; se explora antes de tocar nada; el trabajo pequeño y entendido se hace directo, sin documentos; el trabajo grande (no reanudable desde git diff) lleva un único documento de feature en odd/tasks/<feature>.md con specs citadas literalmente, tareas y bitácora; TDD cuando aplica, línea de riesgo y cierre con evidencia.
+description: Organic Driven Development (ODD), flujo de desarrollo proporcional basado en el de Gentle Shell. Usar en TODA solicitud de un repo que adopte ODD (o cuando el usuario invoque /odd), sin que el usuario pida un plan ni seguimiento — preguntas, revisiones, bugs, features, refactors, infraestructura. Las consultas quedan en solo lectura hasta que se pida un cambio; se explora antes de tocar nada; el trabajo pequeño y entendido se hace directo, sin documentos; el trabajo grande (no reanudable desde git diff) lleva un único documento de feature en docs/odd/tasks/<feature>.md con specs citadas literalmente, tareas y bitácora; TDD cuando aplica, línea de riesgo y cierre con evidencia.
 ---
 
 # /odd — Organic Driven Development
 
 ODD es el flujo de trabajo **por defecto**: toda solicitud entra en él, sin que el usuario pida un flujo, un plan o seguimiento de tareas. No lo describas: ejecútalo. El trabajo crece de forma orgánica: lo pequeño se queda pequeño y solo lo que no se puede retomar desde el diff gana estructura.
 
-Configuración del proyecto (opcional): `odd/config.md` (plantilla en `templates/config-template.md`). Si no existe, se aplican los valores por defecto de cada sección.
+Configuración del proyecto (opcional): `docs/odd/config.md` (plantilla en `templates/config-template.md`). Si no existe, se aplican los valores por defecto de cada sección.
 
 ## Protocolo (obligatorio, en este orden, en cada solicitud)
 
@@ -15,11 +15,11 @@ Configuración del proyecto (opcional): `odd/config.md` (plantilla en `templates
 2. **Explorar.** Lee el código y los requisitos existentes antes de proponer o escribir, en proporción al pedido. No delegues la exploración de archivos que de todos modos vas a leer para trabajar directo.
 3. **Resolver la incertidumbre.** Recomienda investigación solo para una incertidumbre con nombre. Haz **una** pregunta enfocada solo ante una decisión de producto realmente abierta, y espera. Como máximo un desafío independiente de solo lectura para una premisa de alta consecuencia no probada (ver `references/delegacion.md`).
 4. **Clasificar.** Pequeño o grande, **solo** por la sección "Tamaño de la tarea". El trabajo pequeño sigue el camino pequeño.
-5. **Registrar antes de la primera escritura.** Para trabajo grande autorizado: crear `odd/tasks/<feature>.md` desde `templates/feature-template.md` (y su espejo en memoria, si hay herramienta de memoria) **antes** de escribir código, sin pedir permiso para ello. Reconstruir la lista visible de TODOs a partir de sus tareas. Avisar en una línea qué documento se creó y cuántas tareas tiene.
-6. **Implementar tarea por tarea.** Pasar el trabajo **por referencia, nunca parafraseado** (`Spec: odd/tasks/<feature>.md, T2, S3-S4`). Pruebas primero cuando aplique (`references/pruebas.md`). Marcar una tarea como hecha solo con su resultado y sus checks **observados**. Actualizar el documento tras cada transición. Commits por unidad de trabajo según la política de commits (`references/entrega.md`).
+5. **Registrar antes de la primera escritura.** Para trabajo grande autorizado: crear `docs/odd/tasks/<feature>.md` desde `templates/feature-template.md` (y su espejo en memoria, si hay herramienta de memoria) **antes** de escribir código, sin pedir permiso para ello. Reconstruir la lista visible de TODOs a partir de sus tareas. Avisar en una línea qué documento se creó y cuántas tareas tiene.
+6. **Implementar tarea por tarea.** Pasar el trabajo **por referencia, nunca parafraseado** (`Spec: docs/odd/tasks/<feature>.md, T2, S3-S4`). Pruebas primero cuando aplique (`references/pruebas.md`). Marcar una tarea como hecha solo con su resultado y sus checks **observados**. Actualizar el documento tras cada transición. Commits por unidad de trabajo según la política de commits (`references/entrega.md`).
 7. **Cerrar.** Reportar el resultado verificado, **cada** check fallido, omitido o pendiente, la línea de riesgo y el siguiente paso. Nunca terminar con una tarea registrada pendiente salvo que cites la orden explícita del usuario de parar. Una prueba parcial, bloqueada o no disponible se convierte en un único resultado **"Necesita tu decisión"** que nombra lo que falta; eso es un cierre válido, una redacción ambigua no.
 
-**Reanudar** un trabajo interrumpido: leer el documento completo de `odd/tasks/<feature>.md` (y el espejo en memoria si existe), reconciliar requisitos, código y evidencia (`git log`, `git diff`), conservar versiones en conflicto y continuar con la siguiente tarea sin terminar. No inferir el trabajo activo del recuerdo más reciente.
+**Reanudar** un trabajo interrumpido: leer el documento completo de `docs/odd/tasks/<feature>.md` (y el espejo en memoria si existe), reconciliar requisitos, código y evidencia (`git log`, `git diff`), conservar versiones en conflicto y continuar con la siguiente tarea sin terminar. No inferir el trabajo activo del recuerdo más reciente.
 
 ## Tamaño de la tarea
 
@@ -50,7 +50,7 @@ Un error sería difícil de detectar, difícil de deshacer o va más allá del c
 
 **Línea de riesgo:** todo cambio de código cierra con `Risk: item N (motivo)` o `Risk: none`. Antes de escribir `Risk: none`, comprobar si el diff cambia código que también usa un comportamiento existente que el pedido no mencionó (opciones, parsers, helpers compartidos); si es así, es el ítem 3. Cualquier ítem dispara el **verificador independiente** (`references/delegacion.md`).
 
-## Documento de feature (`odd/tasks/<feature>.md`)
+## Documento de feature (`docs/odd/tasks/<feature>.md`)
 
 Un único documento por feature: es la especificación que leen los workers. Orden fijo, lo estable primero y la bitácora al final:
 

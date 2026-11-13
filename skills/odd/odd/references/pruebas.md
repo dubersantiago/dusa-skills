@@ -2,7 +2,7 @@
 
 ## Modo TDD
 
-- Se resuelve de la configuración existente del proyecto (`odd/config.md`), de la sesión o de una elección explícita del usuario. **Que existan tests no activa TDD.**
+- Se resuelve de la configuración existente del proyecto (`docs/odd/config.md`), de la sesión o de una elección explícita del usuario. **Que existan tests no activa TDD.**
 - En trabajo grande, registrar en la cabecera del documento el modo, su fuente y el runner exacto, y pasarlos en cada delegación. Al reanudar, refrescarlos.
 - Si el modo es desconocido o contradictorio, o falta el runner: hacer solo la pregunta que afecta a la siguiente acción. Nunca inventar precedencias ni comandos.
 

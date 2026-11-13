@@ -14,7 +14,7 @@ Autorizar → Explorar → Resolver incertidumbre → Clasificar ─┬─ peque
 | | Pequeño | Grande |
 |---|---|---|
 | Cuándo | Entendido + riesgo contenido + reanudable con el pedido y `git diff` | Falla la prueba de reanudación (varias sesiones, espera externa, requisitos largos) |
-| Documento | Ninguno | `odd/tasks/<feature>.md`: Specs literales, Tasks, Log |
+| Documento | Ninguno | `docs/odd/tasks/<feature>.md`: Specs literales, Tasks, Log |
 | Commits | Solo si los pides | Por unidad de trabajo (~400 líneas por porción, heurística) |
 | Delegación | Ninguna | Solo si un disparador se cumple de verdad |
 
@@ -38,7 +38,7 @@ Usa `sdd` cuando quieras control paso a paso (zonas sensibles, equipos que revis
 | Revisión nativa RDD (`gentle-ai review assess`, consentimiento por candidato) | No incluida. Los cambios de alto riesgo llevan un verificador independiente (subagente) |
 | Etiqueta de fase `gentle_odd_phase` y modos de Pi | No incluidos |
 | Skills `work-unit-commits` y `chained-pr` | Resumidas en `references/entrega.md` |
-| Commits del agente por unidad de trabajo | Igual por defecto; `Commits: usuario` en `odd/config.md` para hacerlos tú |
+| Commits del agente por unidad de trabajo | Igual por defecto; `Commits: usuario` en `docs/odd/config.md` para hacerlos tú |
 
 ## Uso
 
@@ -50,10 +50,10 @@ Como ODD debe correr en **cada** solicitud, agrega esto al `CLAUDE.md` / `AGENTS
 
 ```markdown
 ## Flujo de trabajo
-Usa la skill `odd` (Organic Driven Development) en toda solicitud. Configuración en `odd/config.md`; documentos de feature en `odd/tasks/`.
+Usa la skill `odd` (Organic Driven Development) en toda solicitud. Configuración en `docs/odd/config.md`; documentos de feature en `docs/odd/tasks/`.
 ```
 
-Opcional: copia `odd/templates/config-template.md` de la skill a `odd/config.md` del proyecto (TDD, runner, política de commits, estrategia de entrega, áreas de alto riesgo).
+Opcional: copia `odd/templates/config-template.md` de la skill a `docs/odd/config.md` del proyecto (TDD, runner, política de commits, estrategia de entrega, áreas de alto riesgo).
 
 ## Archivos
 
@@ -63,5 +63,5 @@ Opcional: copia `odd/templates/config-template.md` de la skill a `odd/config.md`
 | `odd/references/delegacion.md` | Disparadores de delegación y prompts de escritor, explorador y verificador |
 | `odd/references/pruebas.md` | TDD, qué testear, comparación diferencial, scratch |
 | `odd/references/entrega.md` | Commits por unidad de trabajo, presupuesto, estrategias de PR |
-| `odd/templates/feature-template.md` | Plantilla de `odd/tasks/<feature>.md` |
-| `odd/templates/config-template.md` | Plantilla de `odd/config.md` |
+| `odd/templates/feature-template.md` | Plantilla de `docs/odd/tasks/<feature>.md` |
+| `odd/templates/config-template.md` | Plantilla de `docs/odd/config.md` |

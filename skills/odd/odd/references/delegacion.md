@@ -31,7 +31,7 @@ Si el agente no soporta subagentes, hacer el trabajo del disparador en la sesió
 
 **Escritor:**
 ```text
-Implementa la tarea <T#> de <odd/tasks/feature.md>. Lee el documento completo hasta "## Log" antes de editar.
+Implementa la tarea <T#> de <docs/odd/tasks/feature.md>. Lee el documento completo hasta "## Log" antes de editar.
 Superficie de edición permitida: <archivos/carpetas>. No toques nada fuera de ella. No hagas commits, no corras formateadores ni instalaciones globales.
 Reutiliza: <helpers existentes> y mantén estas invariantes: <…>.
 TDD: <on/off>, runner: <comando>. Si está on: observa RED antes de implementar, luego GREEN, luego refactor.
@@ -47,7 +47,7 @@ Devuelve como máximo ~2k tokens: hallazgos con ruta:línea, qué es hecho verif
 
 **Verificador independiente (solo lectura, salvo scratch):**
 ```text
-Verifica el cambio <commit o rango> contra <odd/tasks/feature.md> (o el pedido literal: "<…>"). Lee el documento completo.
+Verifica el cambio <commit o rango> contra <docs/odd/tasks/feature.md> (o el pedido literal: "<…>"). Lee el documento completo.
 Riesgo declarado: <Risk: item N (motivo)>.
 1. Corre los ejemplos de las specs autorizados; si mutan datos, contra estado aislado (directorio de mktemp -d), nunca contra datos reales.
 2. Revisa el diff buscando regresiones en lo compartido que toca y efectos no pedidos.

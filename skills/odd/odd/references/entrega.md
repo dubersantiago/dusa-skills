@@ -2,7 +2,7 @@
 
 Aplica al trabajo grande. El trabajo pequeño no hace commits salvo que el usuario los pida.
 
-## Política de commits (`odd/config.md` → "Commits")
+## Política de commits (`docs/odd/config.md` → "Commits")
 
 - **`agente` (por defecto, como en ODD original):** el agente hace commits por unidad de trabajo en la rama de la feature. Si está en la rama por defecto, primero crea la rama. Estos commits son parte de la implementación autorizada; **push, crear PR y merge siguen siendo decisión del usuario**.
 - **`usuario`:** el agente deja cada unidad lista (lista exacta de archivos + mensaje Conventional Commit propuesto), se detiene y, cuando el usuario avisa que hizo el commit, registra el hash en `## Tasks` (`git log --oneline -3`).

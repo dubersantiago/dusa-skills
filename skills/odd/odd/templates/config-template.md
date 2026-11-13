@@ -1,5 +1,5 @@
 <!--
-CONFIGURACIÓN ODD — una por repositorio. Ubicación: odd/config.md (versionar).
+CONFIGURACIÓN ODD — una por repositorio. Ubicación: docs/odd/config.md (versionar).
 Todo es opcional: lo que falte usa el valor por defecto indicado.
 La configuración dice CÓMO se trabaja en este repo; no relaja el protocolo.
 Borrar este comentario en el archivo generado.

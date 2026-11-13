@@ -1,6 +1,6 @@
 <!--
 DOCUMENTO DE FEATURE — ODD
-Ubicación: odd/tasks/<feature>.md (nombre descriptivo, apto para archivo; uno por feature).
+Ubicación: docs/odd/tasks/<feature>.md (nombre descriptivo, apto para archivo; uno por feature).
 Solo para trabajo GRANDE (falla la prueba de reanudación). El trabajo pequeño no crea documento.
 Orden fijo: cabecera → ## Specs → ## Tasks → ## Log (siempre al final, solo se agrega).
 Borrar este comentario en el archivo generado.
@@ -8,7 +8,7 @@ Borrar este comentario en el archivo generado.
 
 # [Nombre de la feature]
 Objetivo: [una línea con el resultado que se busca].
-Rama: [feature/…]; entrega: [ask-on-risk | auto-chain | single-pr | exception-ok]; runner: [comando exacto | ninguno]; TDD: [on | off] ([fuente: odd/config.md | sesión | elección del usuario]).
+Rama: [feature/…]; entrega: [ask-on-risk | auto-chain | single-pr | exception-ok]; runner: [comando exacto | ninguno]; TDD: [on | off] ([fuente: docs/odd/config.md | sesión | elección del usuario]).
 
 ## Specs
 S1. [Requisito. Citar literal lo del usuario: "texto exacto", mensajes de error, comandos, ejemplos.] Aceptación: [criterio observable]. Checks: [test / comando].

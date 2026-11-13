@@ -79,7 +79,7 @@ Autorizar → Explorar → Resolver incertidumbre → Clasificar ─┬─ peque
 ```
 
 - **Lo pequeño va directo**, sin documentos: se retoma con el pedido y `git diff`.
-- **Lo grande lleva un único documento** `odd/tasks/<feature>.md`: specs citadas literalmente, tareas y log.
+- **Lo grande lleva un único documento** `docs/odd/tasks/<feature>.md`: specs citadas literalmente, tareas y log.
 - **Una autorización inicial**; después pregunta solo ante decisiones reales.
 - **Commits del agente por unidad de trabajo** (configurable a `Commits: usuario`, ver [Commits: agente o usuario](#commits-agente-o-usuario)).
 
@@ -104,20 +104,20 @@ ODD debe correr en **cada** solicitud, así que agrega esto al `CLAUDE.md` / `AG
 
 ```markdown
 ## Flujo de trabajo
-Usa la skill `odd` (Organic Driven Development) en toda solicitud. Configuración en `odd/config.md`; documentos de feature en `odd/tasks/`.
+Usa la skill `odd` (Organic Driven Development) en toda solicitud. Configuración en `docs/odd/config.md`; documentos de feature en `docs/odd/tasks/`.
 ```
 
 También puedes invocarla a mano con `/odd`.
 
-### Configurar ODD (`odd/config.md`)
+### Configurar ODD (`docs/odd/config.md`)
 
-La configuración es opcional y vive en `odd/config.md`, en la raíz del proyecto (versiónalo). Lo que no declares usa el valor por defecto. Para crearla, copia la plantilla que viene con la skill instalada:
+La configuración es opcional y vive en `docs/odd/config.md`, en la raíz del proyecto (versiónalo). Lo que no declares usa el valor por defecto. Para crearla, copia la plantilla que viene con la skill instalada:
 
 ```bash
 cd ~/Proyectos/mi-proyecto
-mkdir -p odd
-cp .claude/skills/odd/templates/config-template.md odd/config.md      # instalada en el proyecto
-# cp ~/.claude/skills/odd/templates/config-template.md odd/config.md  # instalada global (-g)
+mkdir -p docs/odd
+cp .claude/skills/odd/templates/config-template.md docs/odd/config.md      # instalada en el proyecto
+# cp ~/.claude/skills/odd/templates/config-template.md docs/odd/config.md  # instalada global (-g)
 ```
 
 Después reemplaza cada `[opción | opción]` por el valor que quieras y borra el comentario del principio. La plantilla tiene secciones de pruebas (TDD, runner, checks), commits y entrega, áreas de alto riesgo y referencias.
@@ -126,7 +126,7 @@ Después reemplaza cada `[opción | opción]` por el valor que quieras y borra e
 
 Por defecto, en el trabajo grande **el agente hace los commits** por unidad de trabajo, en la rama de la feature (si está en la rama por defecto, primero crea la rama). Si prefieres hacerlos tú, como en SDD, pon `Commits: usuario`.
 
-Ejemplo completo de `odd/config.md` para un proyecto donde los commits los haces tú:
+Ejemplo completo de `docs/odd/config.md` para un proyecto donde los commits los haces tú:
 
 ```markdown
 # ODD — mi-proyecto
@@ -149,8 +149,8 @@ Ejemplo completo de `odd/config.md` para un proyecto donde los commits los haces
 Si solo quieres cambiar los commits, basta con esto (todo lo demás usa los valores por defecto):
 
 ```bash
-mkdir -p odd
-cat > odd/config.md <<'EOF'
+mkdir -p docs/odd
+cat > docs/odd/config.md <<'EOF'
 # ODD — mi-proyecto
 
 ## Commits y entrega
@@ -170,7 +170,7 @@ Tú:      git add src/auth/token.ts src/auth/token.test.ts
          git commit -m "feat(auth): validar expiración del token en el login"
          → "listo, hice el commit"
 
-Agente:  Registra el hash en ## Tasks de odd/tasks/<feature>.md y sigue con T3.
+Agente:  Registra el hash en ## Tasks de docs/odd/tasks/<feature>.md y sigue con T3.
 ```
 
 | | `agente` (por defecto) | `usuario` |
@@ -187,7 +187,7 @@ Guía completa (tamaños, diferencias con SDD, qué se adaptó del original): [s
 
 ## Usar SDD y ODD en un mismo proyecto
 
-Se pueden instalar las dos en el mismo proyecto. No chocan en archivos (SDD usa `docs/contexts/`, ODD usa `odd/`), pero sí en el disparo: ODD se activa en **toda** solicitud desde el `CLAUDE.md`, y SDD solo con `/sdd`. Sin una regla de prioridad, el agente podría aplicar las dos a la vez. La solución es declarar en el `CLAUDE.md` / `AGENTS.md` cuál manda en cada caso.
+Se pueden instalar las dos en el mismo proyecto. No chocan en archivos (SDD usa `docs/contexts/`, ODD usa `docs/odd/`), pero sí en el disparo: ODD se activa en **toda** solicitud desde el `CLAUDE.md`, y SDD solo con `/sdd`. Sin una regla de prioridad, el agente podría aplicar las dos a la vez. La solución es declarar en el `CLAUDE.md` / `AGENTS.md` cuál manda en cada caso.
 
 **1. Instala las dos** (el orquestador de SDD necesita sus 5 skills hermanas):
 
@@ -203,26 +203,26 @@ npx skills add dubersantiago/dusa-skills -a claude-code \
 ## Flujo de trabajo
 Este proyecto usa dos metodologías. Elige una por solicitud, nunca las dos a la vez:
 
-- **Por defecto, usa la skill `odd`** (Organic Driven Development) en toda solicitud. Configuración en `odd/config.md`; documentos de feature en `odd/tasks/`.
+- **Por defecto, usa la skill `odd`** (Organic Driven Development) en toda solicitud. Configuración en `docs/odd/config.md`; documentos de feature en `docs/odd/tasks/`.
 - **Usa la skill `sdd` solo si invoco `/sdd`** o si lo pido de forma explícita ("hazlo con SDD"). Mientras dure ese trabajo, `odd` no aplica: sigue el flujo de `sdd` (contexto en `docs/contexts/`, una tarea a la vez, commits míos).
 - Si hay un contexto SDD abierto (`docs/contexts/*-context.md` sin cerrar) y retomo ese trabajo, continúa con `sdd`.
 - Zonas sensibles (indica aquí las rutas, p. ej. `src/auth/**`, `db/migrations/`): usa siempre `sdd`.
 ```
 
-**3. Configura cada una por separado**, son independientes: `/sdd configurar` crea `docs/contexts/_config.md` y `odd/config.md` es opcional (ver [Configurar ODD](#configurar-odd-oddconfigmd)).
+**3. Configura cada una por separado**, son independientes: `/sdd configurar` crea `docs/contexts/_config.md` y `docs/odd/config.md` es opcional (ver [Configurar ODD](#configurar-odd-docsoddconfigmd)).
 
 **Cómo se reparte el trabajo**
 
 | Situación | Metodología | Cómo se entra |
 |---|---|---|
 | Arreglo pequeño, cambio de una línea, duda | `odd` (directo, sin documentos) | Solicitud normal |
-| Feature mediana o grande del día a día | `odd` (un documento en `odd/tasks/`) | Solicitud normal |
+| Feature mediana o grande del día a día | `odd` (un documento en `docs/odd/tasks/`) | Solicitud normal |
 | Zona sensible, cambio que el equipo revisa tarea por tarea | `sdd` | `/sdd <spec o pedido>` |
 | Retomar un trabajo de SDD | `sdd` | `/sdd <ID>` |
 
-Un mismo trabajo usa una sola metodología de principio a fin. Si uno empezado en `odd` resulta ser sensible, ciérralo o descártalo y reábrelo con `/sdd`; no mezcles `odd/tasks/<feature>.md` con `docs/contexts/<ID>-context.md` para la misma feature.
+Un mismo trabajo usa una sola metodología de principio a fin. Si uno empezado en `odd` resulta ser sensible, ciérralo o descártalo y reábrelo con `/sdd`; no mezcles `docs/odd/tasks/<feature>.md` con `docs/contexts/<ID>-context.md` para la misma feature.
 
-Si las dos usan commits, ojo con los modos: SDD siempre deja los commits al usuario; ODD por defecto los hace el agente. Si quieres el mismo comportamiento en todo el proyecto, pon `Commits: usuario` en `odd/config.md`.
+Si las dos usan commits, ojo con los modos: SDD siempre deja los commits al usuario; ODD por defecto los hace el agente. Si quieres el mismo comportamiento en todo el proyecto, pon `Commits: usuario` en `docs/odd/config.md`.
 
 ---
 
